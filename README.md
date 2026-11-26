@@ -1,5 +1,7 @@
 # AevumPay
 
+Live demo: https://aevumpay-v3.vercel.app
+
 **Invoice-based stablecoin payments with spending limits for AI agents, on the QDay testnet.**
 
 Built for the [Aevum Builder Challenge #1](https://dorahacks.io/hackathon/qday/detail). A merchant issues an on-chain invoice in tUSD8 (the official 6-decimal test token). A customer, or an AI agent acting inside limits the customer set, pays it. The merchant is paid at once and every step is visible on the explorer.
