@@ -1,0 +1,19 @@
+node_modules/
+.next/
+out/
+build/
+dist/
+*.log
+.DS_Store
+.vercel
+.idea/
+.vscode/
+*.tsbuildinfo
+next-env.d.ts
+db/
+custom.db*
+
+# Environment files: ignore everything except the examples
+.env*
+!.env.example
+!contracts/.env.example

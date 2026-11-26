@@ -1,0 +1,27 @@
+{
+  "name": "aevumpay-contracts",
+  "version": "1.0.0",
+  "description": "AevumPay — Invoice-based USDT/tUSD8 payment gateway smart contracts for the Aevum Builder Challenge #1 on the QDay testnet",
+  "license": "MIT",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy": "hardhat run scripts/deploy.js --network qday",
+    "deploy:local": "hardhat run scripts/deploy.js --network hardhat",
+    "demo": "hardhat run scripts/demo-payment.js --network qday",
+    "demo:local": "hardhat run scripts/demo-payment.js --network hardhat",
+    "verify:gateway": "node scripts/verify.js",
+    "verify": "hardhat verify --network qday",
+    "demo:agent": "hardhat run scripts/demo-agent.js --network qday",
+    "demo:agent:local": "hardhat run scripts/demo-agent.js --network hardhat"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.0",
+    "solc": "0.8.24"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2",
+    "dotenv": "^16.4.5"
+  }
+}

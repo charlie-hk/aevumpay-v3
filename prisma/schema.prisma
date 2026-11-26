@@ -1,0 +1,170 @@
+// AevumPay — Invoice-based USDT/tUSD8 payment gateway for QDay testnet
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// A merchant account that issues invoices and receives payments.
+model Merchant {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  businessName  String?
+  walletAddress String    @unique
+  /// Least-privilege API key for server-to-server merchant calls. Never returned
+  /// to browsers — the dashboard authenticates with a server-side session instead.
+  apiKey        String    @unique @default(cuid())
+  /// scrypt password hash (format: scrypt$<saltHex>$<hashHex>). Nullable so that
+  /// seeded demo merchants without a password fail closed on login.
+  passwordHash  String?
+  avatarColor   String    @default("#00DC82")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  invoices  Invoice[]
+  webhooks  Webhook[]
+  messages  ChatMessage[] @relation("MerchantMessages")
+  sessions  ChatSession[]
+}
+
+/// A payment request issued by a merchant to a customer.
+model Invoice {
+  id             String      @id @default(cuid())
+  invoiceNumber  String      @unique
+  merchantId     String
+  merchant       Merchant    @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  amount         Float
+  currency       String      @default("USD")
+  token          String      @default("tUSD8") // tUSD8 | USDT
+  customerEmail  String?
+  customerName   String?
+  description    String?
+  orderRef       String?
+  onChainInvoiceId String? // bytes32 id returned by gateway.createInvoice()
+  salt             String? // random salt used for the on-chain invoice
+  onChainTxHash    String? // tx hash of the on-chain createInvoice()
+  gatewayAddress   String? // actual issuing contract; legacy rows are not trusted
+  gatewayChainId   Int?
+  status         String      @default("PENDING") // PENDING | PAID | EXPIRED | REFUNDED | CANCELLED
+  payAddress     String
+  payAmount      Float?
+  txHash         String?
+  payerAddress   String?
+  blockNumber    Int?
+  networkFee     Float?
+  /// Provenance of the settlement, so simulated/historical rows can never be
+  /// mistaken for real on-chain accounting:
+  ///   ONCHAIN          — settled by an InvoicePaid event verified against the RPC
+  ///   SIMULATED        — demo-only settlement (labelled, excluded from accounting)
+  ///   HISTORICAL_SEED  — demo fixture created by the seeder (excluded from accounting)
+  ///   null             — no settlement recorded yet
+  settlementSource String?
+  expiresAt      DateTime
+  paidAt         DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  transactions   Transaction[]
+  webhookDeliveries WebhookDelivery[]
+
+  @@index([merchantId, status])
+  @@index([createdAt])
+}
+
+/// On-chain (simulated) transaction record linked to an invoice.
+model Transaction {
+  id           String    @id @default(cuid())
+  invoiceId    String
+  invoice      Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  txHash       String    @unique
+  fromAddress  String
+  toAddress    String
+  amount       Float
+  token        String
+  blockNumber  Int
+  status       String    @default("CONFIRMED") // PENDING | CONFIRMED | FAILED
+  networkFee   Float     @default(0)
+  confirmations Int      @default(1)
+  /// Mirrors Invoice.settlementSource: ONCHAIN | SIMULATED | HISTORICAL_SEED.
+  source       String?
+  createdAt    DateTime  @default(now())
+
+  @@index([invoiceId])
+  @@index([createdAt])
+}
+
+/// Webhook configuration for a merchant (URL + events + secret).
+model Webhook {
+  id          String   @id @default(cuid())
+  merchantId  String
+  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  url         String
+  events      String   // comma-separated: invoice.paid,invoice.created,invoice.expired
+  secret      String   @default(cuid())
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  deliveries  WebhookDelivery[]
+}
+
+/// Log of webhook delivery attempts for observability.
+model WebhookDelivery {
+  id         String   @id @default(cuid())
+  webhookId  String
+  webhook    Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  invoiceId  String?
+  invoice    Invoice? @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  event      String
+  payload    String   // JSON string
+  statusCode Int?
+  response   String?
+  success    Boolean  @default(false)
+  attempts   Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([webhookId])
+}
+
+/// A support chat session between a customer/merchant and support agent.
+model ChatSession {
+  id          String   @id @default(cuid())
+  merchantId  String?
+  merchant    Merchant? @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  customerName String
+  subject     String?
+  status      String   @default("OPEN") // OPEN | RESOLVED | CLOSED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  messages    ChatMessage[]
+}
+
+/// Individual message in a chat session.
+model ChatMessage {
+  id         String   @id @default(cuid())
+  sessionId  String
+  session    ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  merchantId String?
+  merchant   Merchant? @relation("MerchantMessages", fields: [merchantId], references: [id], onDelete: Cascade)
+  sender     String   // customer | support | bot
+  content    String
+  createdAt  DateTime @default(now())
+
+  @@index([sessionId])
+}
+
+/// Shared per-identity limits for costly API operations.
+model RequestBudget {
+  id        String   @id
+  hits      Int
+  expiresAt DateTime
+
+  @@index([expiresAt])
+}

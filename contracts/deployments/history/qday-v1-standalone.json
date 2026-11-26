@@ -1,0 +1,79 @@
+{
+  "network": "qday-testnet",
+  "chainId": 44005,
+  "rpc": "https://rpc-test.qday.info",
+  "explorer": "https://explorer-test.qday.info",
+  "deployer": "0x7F6f8d310dD5523D2B222c61Bb013c6a80ddB66E",
+  "contracts": {
+    "AevumPaymentGateway": {
+      "address": "0x8D86d3fEE0c2420192d82716c82bc2e79585d5c9",
+      "deploymentTx": "0x387771b9dfa5bc06e84f05e793f1126e23053fb5db30b923c5adf866dffc6b76",
+      "blockNumber": 3665481,
+      "deployedAt": "2026-11-20T13:28:49Z",
+      "gasUsed": 1534030,
+      "constructorArgs": {
+        "feeCollector": "0x7F6f8d310dD5523D2B222c61Bb013c6a80ddB66E"
+      },
+      "verified": true,
+      "verificationMethod": "Solidity (Standard JSON input) — Blockscout /api verifysourcecode",
+      "compiler": "v0.8.24+commit.e11b9ed9",
+      "evmVersion": "paris",
+      "optimizer": { "enabled": true, "runs": 200 },
+      "viaIR": true
+    },
+    "tUSD8": {
+      "address": "0x456569838f1d43009A91ebA4263147Afd7233483",
+      "decimals": 6,
+      "note": "Official testnet stablecoin — not deployed by this project"
+    }
+  },
+  "setupTransactions": [
+    {
+      "step": "whitelistToken",
+      "tx": "0x6a0a5431e93fc196e26dbdb58aa41ffdedef3d4f81f6b16b4b9710eb0ed99a75",
+      "blockNumber": 3665486,
+      "gasUsed": 94436
+    },
+    {
+      "step": "registerMerchant",
+      "tx": "0xb1a67e3f6dffafd76e0973e92692ab84e2601c3a47213d8c483cd79e113d0ee6",
+      "blockNumber": 3665490,
+      "gasUsed": 48933
+    }
+  ],
+  "demoRun": {
+    "script": "scripts/demo-payment.js",
+    "ranAt": "2026-11-20",
+    "merchant": "0x7F6f8d310dD5523D2B222c61Bb013c6a80ddB66E",
+    "customer": "0x3C896Ee767BEe48D09891f8E0175868D981FF365",
+    "feeBps": 25,
+    "transactions": [
+      { "step": "fund-gas", "tx": "0xe3aef03a5c6333bdf9d59cb2d1cd31b7300d4da068153013d118665d9d8ee1a5" },
+      { "step": "fund-tusd8", "tx": "0xf972cf09a82b2275b11fde2408ab24fb5247e254ca62f10658322dc065374b2b" },
+      { "step": "create-A", "tx": "0xdfdc6b7045a24b772d8a1cfea4fc52d1559abe7b61563758042e463be6e98126" },
+      { "step": "approve-A", "tx": "0x814a5f0a88008617ba85c84293285bb44f9491d52c3a95f414f63b5e5ffb6864" },
+      { "step": "pay-A", "tx": "0x4547a05cadf1ed99dd1b58f366597caec3adb0324ab8a89550aaf28caa4dc06b" },
+      { "step": "create-B", "tx": "0x1d0f52a6f66df127687e4e1ce15fafa32784263c5ad9c8480cce84da302527a1" },
+      { "step": "approve-B", "tx": "0x7495cebe5a46cb7cd5d667a16b9e4e1bc8a114b403af9c213e489a753f332af3" },
+      { "step": "pay-B", "tx": "0x52f32fc063248be27e7555e75ea6c45c005279dcea02b071bf931ff9effe44ff" },
+      { "step": "approve-refund", "tx": "0x662e5622064db431d318680f3f31b77d6f6c56b0655e4daf86e29755ebecd252" },
+      { "step": "refund", "tx": "0xe8ffe75c64f307407ef6edc593199f7c231507cc76d2713485362d0eda1c241e" }
+    ],
+    "invoices": [
+      {
+        "label": "INV-A",
+        "invoiceId": "0xd985c2ba11bb8451979e28762d14c04539040b599c67d77d64e8bf96c2ce17d7",
+        "amount": "2000000",
+        "fee": "5000",
+        "status": "PAID"
+      },
+      {
+        "label": "INV-B",
+        "invoiceId": "0x940a4b7b9b3ce6ea958e257690a4371ca9d9d5839b8e0fdbbdf425fd3ac6633e",
+        "amount": "1000000",
+        "fee": "2500",
+        "status": "REFUNDED"
+      }
+    ]
+  }
+}

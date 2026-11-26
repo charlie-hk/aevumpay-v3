@@ -1,0 +1,48 @@
+{
+  "version": "v3-candidate",
+  "network": "qday",
+  "chainId": 44005,
+  "explorer": "https://explorer-test.qday.info",
+  "refundWindowSeconds": 2592000,
+  "deployedAt": "2026-11-25T20:31:15.000Z",
+  "deployer": "0x7F6f8d310dD5523D2B222c61Bb013c6a80ddB66E",
+  "contracts": {
+    "tUSD8": {
+      "address": "0x456569838f1d43009A91ebA4263147Afd7233483",
+      "decimals": 6,
+      "official": true
+    },
+    "AevumPaymentGateway": {
+      "address": "0x6935DC350d790A11FF227841130B9de1642A865a",
+      "tx": "0xd03acd30418b451ffb78f4a67ca8f773f3ee59bbe5a2a8db66a019bc3519a137",
+      "blockNumber": 4116934,
+      "gasUsed": "2199169",
+      "runtimeCodeHash": "0xd791f9f16f62ef0439478cba5dec3c5dd62699bdbb56b6774bf7b0cecf49e863",
+      "constructorArgs": {
+        "feeCollector": "0x7F6f8d310dD5523D2B222c61Bb013c6a80ddB66E"
+      },
+      "verified": true,
+      "compiler": "v0.8.24+commit.e11b9ed9",
+      "evmVersion": "paris",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "viaIR": true
+    }
+  },
+  "setupTransactions": [
+    {
+      "step": "whitelistToken",
+      "tx": "0x8369963f0fb0fc6f48f88df37b6c10dcd31d791f208e355823b22b9099df5324",
+      "blockNumber": 4116938,
+      "gasUsed": "94572"
+    },
+    {
+      "step": "registerMerchant",
+      "tx": "0x0949d1db2d741713b0b293edb5b4aa8c28d8c2075ce75a306356eadc1280ce73",
+      "blockNumber": 4116941,
+      "gasUsed": "49045"
+    }
+  ]
+}

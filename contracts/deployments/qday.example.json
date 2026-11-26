@@ -1,0 +1,11 @@
+{
+  "network": "qday",
+  "chainId": 44005,
+  "deployedAt": "2026-11-09T00:00:00.000Z",
+  "deployer": "0x0000000000000000000000000000000000000000",
+  "contracts": {
+    "tUSD8": "0x0000000000000000000000000000000000000000",
+    "AevumPaymentGateway": "0x0000000000000000000000000000000000000000"
+  },
+  "note": "Replace these placeholders with real deployed addresses after running `npm run deploy` on the QDay testnet."
+}
