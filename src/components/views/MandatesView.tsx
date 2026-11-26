@@ -60,11 +60,11 @@ export function MandatesView() {
     const eth = typeof window !== 'undefined' ? window.ethereum : undefined
     if (!eth) return
     const onAccounts = (...args: unknown[]) => setAccount(((args[0] as string[]) || [])[0] ?? null)
-    const onChain = (...args: unknown[]) => setChainOk(args[0] === QDAY_NETWORK.chainId)
+    const onChain = (...args: unknown[]) => setChainOk(String(args[0]).toLowerCase() === QDAY_NETWORK.chainId.toLowerCase())
     eth.on?.('accountsChanged', onAccounts)
     eth.on?.('chainChanged', onChain)
     eth.request({ method: 'eth_accounts' }).then((a) => setAccount(((a as string[]) || [])[0] ?? null)).catch(() => {})
-    eth.request({ method: 'eth_chainId' }).then((c) => setChainOk(c === QDAY_NETWORK.chainId)).catch(() => {})
+    eth.request({ method: 'eth_chainId' }).then((c) => setChainOk(String(c).toLowerCase() === QDAY_NETWORK.chainId.toLowerCase())).catch(() => {})
     return () => {
       eth.removeListener?.('accountsChanged', onAccounts)
       eth.removeListener?.('chainChanged', onChain)
@@ -82,7 +82,7 @@ export function MandatesView() {
       if (!accounts?.[0]) return
       setAccount(accounts[0])
       const chainId = (await eth.request({ method: 'eth_chainId' })) as string
-      if (chainId !== QDAY_NETWORK.chainId) {
+      if (chainId.toLowerCase() !== QDAY_NETWORK.chainId.toLowerCase()) {
         try {
           await eth.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: QDAY_NETWORK.chainId }] })
         } catch (switchErr) {
