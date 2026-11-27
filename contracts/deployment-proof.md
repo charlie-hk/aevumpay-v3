@@ -45,4 +45,13 @@ All links are on the QDay testnet explorer (https://explorer-test.qday.info). Te
 - Site: https://aevumpay-v3.vercel.app
 - Mandate granted by the payer wallet: https://explorer-test.qday.info/tx/0x0f83361485090b1bb1e79a059478662b4f0fe282042ac8222e6d47ec9a47578d
 - Agent address: 0x1D1d7C1ec58d12cbA440c5d34a31970d44126543
+- Mandate revoked: https://explorer-test.qday.info/tx/0x6995efe46c03c12fb9a1c6bcc2ad4d379f10d873f68d9aa0131cb59bc45d2989
 - Limits: 2 tUSD8 per invoice, 5 tUSD8 total, valid until 3 December 2026
+
+## Invoice created and paid on the live site (V3)
+- Site: https://aevumpay-v3.vercel.app
+- Invoice: INV-F92F6CE0700C3800
+- On-chain invoice creation (createInvoice): https://explorer-test.qday.info/tx/0xfc400fe434698acf8d0721afc9381e13746ceb35c70db4f7760fc4467a68bd78
+- Payment (pay): https://explorer-test.qday.info/tx/0xe5ce5ec5303c80835d79e371c02e1fd48aead1d39d34216698f65d9346ad69a5
+- Amount: 1 tUSD8. The merchant received 0.9975 tUSD8 and 0.0025 tUSD8 (0.25%) was reserved as the fee.
+- Note: the same testnet wallet acted as merchant and payer in this test.
